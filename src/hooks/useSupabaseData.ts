@@ -1,12 +1,12 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 // Generic hook for fetching table data with realtime
 function useTable<T>(table: string, orderCol?: string) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
-  const hookId = useId();
-  const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
+  // Stable unique channel name per mount, avoids React Strict Mode double-subscribe
+  const channelNameRef = useRef(`${table}_${Math.random().toString(36).slice(2)}`);
 
   useEffect(() => {
     let cancelled = false;
@@ -20,9 +20,8 @@ function useTable<T>(table: string, orderCol?: string) {
     };
     fetchData();
 
-    const channelName = `${table}_${hookId.replace(/:/g, "_")}`;
     const channel = supabase
-      .channel(channelName)
+      .channel(channelNameRef.current)
       .on("postgres_changes", { event: "*", schema: "public", table }, (payload) => {
         if (payload.eventType === "INSERT") {
           setData(prev => [...prev, payload.new as T]);
@@ -42,14 +41,11 @@ function useTable<T>(table: string, orderCol?: string) {
       })
       .subscribe();
 
-    channelRef.current = channel;
-
     return () => {
       cancelled = true;
       supabase.removeChannel(channel);
-      channelRef.current = null;
     };
-  }, [table, orderCol, hookId]);
+  }, [table, orderCol]);
 
   return { data, loading };
 }

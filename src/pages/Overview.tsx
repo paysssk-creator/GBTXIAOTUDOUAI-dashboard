@@ -1,4 +1,5 @@
-import { Brain, Server, Key, Clock, TrendingUp, Shield, Cpu } from "lucide-react";
+import { Brain, Server, Key, Clock, TrendingUp, Shield, Cpu, Video } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import MarketTickerBar from "@/components/dashboard/MarketTickerBar";
 import StatusCard from "@/components/dashboard/StatusCard";
 import SystemGauge from "@/components/dashboard/SystemGauge";
@@ -10,14 +11,25 @@ export default function Overview() {
   const { status } = useSystemStatus();
   const { data: indices } = useMarketIndices();
   const { report } = useAuditReport();
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <MarketTickerBar />
       <div className="flex-1 p-6 overflow-auto space-y-6">
-        <div>
-          <h1 className="text-xl font-bold text-foreground">系统总览</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">实时状态监控 · {new Date().toLocaleDateString("zh-CN")}</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold text-foreground">系统总览</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">实时状态监控 · {new Date().toLocaleDateString("zh-CN")}</p>
+          </div>
+          {/* Live Room shortcut */}
+          <button
+            onClick={() => navigate("/live")}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 transition-colors text-sm font-semibold">
+            <span className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
+            <Video className="w-4 h-4" />
+            进入直播间
+          </button>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
