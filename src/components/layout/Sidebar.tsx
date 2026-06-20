@@ -1,5 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { LayoutDashboard, Bot, BarChart2, ShieldCheck, MessageSquare, Zap } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Bot, BarChart2, ShieldCheck, MessageSquare, Zap, Video } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const nav = [
@@ -11,6 +11,8 @@ const nav = [
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="fixed inset-y-0 left-0 w-60 flex flex-col border-r border-border bg-surface-base z-50">
       {/* Brand */}
@@ -49,6 +51,18 @@ export default function Sidebar() {
             )}
           </NavLink>
         ))}
+
+        {/* Live Room shortcut */}
+        <div className="pt-3">
+          <p className="text-[10px] text-muted-foreground tracking-widest uppercase px-3 pb-2">工具</p>
+          <button
+            onClick={() => navigate("/live")}
+            className="relative w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 text-muted-foreground hover:text-foreground hover:bg-primary/5">
+            <Video className="w-4 h-4 shrink-0" />
+            带货直播间
+            <span className="ml-auto text-[9px] bg-red-500/20 text-red-400 border border-red-500/30 px-1.5 py-0.5 rounded font-bold">LIVE</span>
+          </button>
+        </div>
       </nav>
 
       {/* Status footer */}

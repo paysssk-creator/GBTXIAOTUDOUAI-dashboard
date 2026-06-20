@@ -4,6 +4,7 @@ import AgentMonitor from "./pages/AgentMonitor";
 import MarketData from "./pages/MarketData";
 import AuditReport from "./pages/AuditReport";
 import AIChat from "./pages/AIChat";
+import LiveRoom from "./pages/LiveRoom";
 import NotFound from "./pages/NotFound";
 
 export const routers = [
@@ -18,5 +19,6 @@ export const routers = [
       { path: "chat", element: <AIChat /> },
     ],
   },
+  { path: "/live", element: <LiveRoom /> },
   { path: "*", element: <NotFound /> },
 ];
